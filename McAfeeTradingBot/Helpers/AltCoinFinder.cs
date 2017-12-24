@@ -20,6 +20,8 @@ namespace McAfeeTradingBot.Helpers
 
             if (tweet.IndexOf(CoinOfTheDayExpression, StringComparison.OrdinalIgnoreCase) >= 0)
             {
+                Console.WriteLine("Coin of the day tweet found!");
+
                 coins.ForEach(c =>
                 {
                     if (tweet.IndexOf(c, StringComparison.OrdinalIgnoreCase) >= 0)

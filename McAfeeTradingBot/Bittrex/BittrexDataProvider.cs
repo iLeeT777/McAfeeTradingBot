@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Bittrex.Net;
+using Bittrex.Net.Objects;
 using Unity.Interception.Utilities;
 
 namespace McAfeeTradingBot.Bittrex
 {
     internal class BittrexDataProvider
     {
-        // Exclude the top 5 as these have a massive volume and it could be difficult to manipulate anyway.
+        // Exclude the top 5 as these have a massive volume and it could be difficult to manipulate anyway. Exclude 'Decent' from the list as well.
         private readonly HashSet<string> _excludedCoins = new HashSet<string>
         {
-            "Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Litecoin"
+            "Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Litecoin", "DECENT"
         };
 
         /// <summary>
@@ -39,9 +41,27 @@ namespace McAfeeTradingBot.Bittrex
             return currenciesDictionary;
         }
 
-        internal void PlaceBuyOrder()
+        internal void PlaceBuyOrder(string coinOfTheDay)
         {
-            // TODO
+            using (var client = new BittrexClient())
+            {
+                var coinOfTheDayOrderBook = client.GetOrderBook($"{"BTC"}-{coinOfTheDay}");
+                var btcOrderBook = client.GetOrderBook($"{"USDT"}-{"BTC"}");
+
+                if (coinOfTheDayOrderBook.Success && btcOrderBook.Success)
+                {
+                    var coinOfTheDayLastPrice = coinOfTheDayOrderBook.Result.Buy.First();
+                    var btcLastPrice = btcOrderBook.Result.Buy.First();
+
+                    var rate = coinOfTheDayLastPrice.Rate;
+
+                    // This equals to roughly 15$ worth of buying on BTC-alt coin market. TODO - pull out the markets and price to app.config
+                    var amountToBuy = 15 / (btcLastPrice.Rate * rate);
+
+                    // TODO - verify if the above is correct before putting a buy order.
+                    //client.PlaceOrder(OrderType.Buy, $"{"BTC"}-{coinOfTheDay}", amountToBuy, rate);
+                }
+            }
         }
     }
 }

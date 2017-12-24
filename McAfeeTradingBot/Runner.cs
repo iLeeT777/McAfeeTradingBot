@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Timers;
 using Bittrex.Net;
 using McAfeeTradingBot.Bittrex;
@@ -57,8 +58,13 @@ namespace McAfeeTradingBot
 
             if (_altCoinFinder.TryFindCoinOfTheDay(mcAfeeLastTweet.Text, _currenciesCache.Values, out var coinOfTheDay))
             {
-                // Coin found! Place order.
-                // TODO use bittrex data provider to place the order.
+                Console.WriteLine("Coin of the day [{0}] found!", coinOfTheDay);
+                Console.WriteLine("Placing BUY order...");
+
+                var shortName = _currenciesCache
+                    .FirstOrDefault(x => x.Value.Equals(coinOfTheDay, StringComparison.OrdinalIgnoreCase)).Key;
+
+                _dataProvider.PlaceBuyOrder(shortName);
             }
             else
             {
