@@ -33,5 +33,22 @@ namespace McAfeeTradingBot.Helpers
 
             return true;
         }
+
+        internal bool ValidateBittrexSettings()
+        {
+            if (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["BittrexApiKey"]))
+            {
+                Console.WriteLine("You need to specify Bittrex API key.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["BittrexApiSecret"]))
+            {
+                Console.WriteLine("You need to specify Bittrex API secret.");
+                return false;
+            }
+
+            return true;
+        }
     }
 }

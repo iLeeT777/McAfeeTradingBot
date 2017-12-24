@@ -1,5 +1,4 @@
-﻿using McAfeeTradingBot.Unity;
-using Unity;
+﻿using Unity;
 
 namespace McAfeeTradingBot
 {
@@ -9,8 +8,6 @@ namespace McAfeeTradingBot
         {
             using (var container = new UnityContainer())
             {
-                container.AddNewExtension<Registration>();
-
                 container.Resolve<Runner>().Run();
             }
         }
