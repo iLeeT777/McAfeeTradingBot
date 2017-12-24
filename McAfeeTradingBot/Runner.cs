@@ -50,12 +50,12 @@ namespace McAfeeTradingBot
 
         private void OnTwitterListenerElapsed(object sender, ElapsedEventArgs e)
         {
-            // Stop the timer while we are processings as MS will otherwise fire another elapsed event on a different thread pool thread.
+            // Stop the timer while we are processing as MS will otherwise fire another elapsed event on a different thread pool thread.
             _twitterListener.Stop();
 
             var mcAfeeLastTweet = User.GetUserFromScreenName(McAfeeTwitterName).Status;
 
-            if (_altCoinFinder.TryFindCoinOfTheDay(mcAfeeLastTweet.Text))
+            if (_altCoinFinder.TryFindCoinOfTheDay(mcAfeeLastTweet.Text, _currenciesCache.Values, out var coinOfTheDay))
             {
                 // Coin found! Place order.
                 // TODO use bittrex data provider to place the order.

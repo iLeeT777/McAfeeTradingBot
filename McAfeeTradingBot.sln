@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McAfeeTradingBot", "McAfeeTradingBot\McAfeeTradingBot.csproj", "{2BED0006-D971-4B8A-88C5-4E63FDCEABA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McAfeeTradingBot.Tests", "McAfeeTradingBot.Tests\McAfeeTradingBot.Tests.csproj", "{9670B153-FD30-4036-830B-4947159628B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2BED0006-D971-4B8A-88C5-4E63FDCEABA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BED0006-D971-4B8A-88C5-4E63FDCEABA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BED0006-D971-4B8A-88C5-4E63FDCEABA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9670B153-FD30-4036-830B-4947159628B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9670B153-FD30-4036-830B-4947159628B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9670B153-FD30-4036-830B-4947159628B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9670B153-FD30-4036-830B-4947159628B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
