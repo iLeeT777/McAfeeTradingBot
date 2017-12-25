@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using Bittrex.Net;
 using Bittrex.Net.Objects;
@@ -53,13 +55,14 @@ namespace McAfeeTradingBot.Bittrex
                     var coinOfTheDayLastPrice = coinOfTheDayOrderBook.Result.Buy.First();
                     var btcLastPrice = btcOrderBook.Result.Buy.First();
 
-                    var rate = coinOfTheDayLastPrice.Rate;
+                    // Boost up the order by 8% as the price is being pumped really fast.
+                    var rate = coinOfTheDayLastPrice.Rate + coinOfTheDayLastPrice.Rate * 0.08m;
 
-                    // This equals to roughly 15$ worth of buying on BTC-alt coin market. TODO - pull out the markets and price to app.config
-                    var amountToBuy = 15 / (btcLastPrice.Rate * rate);
+                    var amountToBuy = int.Parse(ConfigurationManager.AppSettings["AmountToBuyInDollars"]) / (btcLastPrice.Rate * rate);
 
-                    // TODO - verify if the above is correct before putting a buy order.
-                    //client.PlaceOrder(OrderType.Buy, $"{"BTC"}-{coinOfTheDay}", amountToBuy, rate);
+                    Console.WriteLine($"Order details - Amount: [{amountToBuy}]; Rate: [{rate}]");
+
+                    client.PlaceOrder(OrderType.Buy, $"{"BTC"}-{coinOfTheDay}", amountToBuy, rate);
                 }
             }
         }

@@ -50,5 +50,17 @@ namespace McAfeeTradingBot.Helpers
 
             return true;
         }
+
+        internal bool ValidateBuyAmount()
+        {
+            if (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["AmountToBuyInDollars"])
+                || !int.TryParse(ConfigurationManager.AppSettings["AmountToBuyInDollars"], out var _))
+            {
+                Console.WriteLine("You need to specify amount in $ to buy.");
+                return false;
+            }
+
+            return true;
+        }
     }
 }

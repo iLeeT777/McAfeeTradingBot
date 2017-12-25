@@ -38,7 +38,7 @@ namespace McAfeeTradingBot.Tests
             Assert.IsTrue(success);
 
             //var shortName = currencies
-            //    .FirstOrDefault(x => x.Value.Equals(actualCoinOfTheDay, StringComparison.OrdinalIgnoreCase)).Key;
+            //    .FirstOrDefault(x => x.Value.Equals("Verge", StringComparison.OrdinalIgnoreCase)).Key;
 
             //new BittrexDataProvider().PlaceBuyOrder(shortName);
         }

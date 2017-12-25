@@ -14,8 +14,8 @@ namespace McAfeeTradingBot
     {
         private const string McAfeeTwitterName = "officialmcafee";
 
-        // poll Twitter every 0.5 seconds
-        private readonly Timer _twitterListener = new Timer(500);
+        // poll Twitter every 0.1 seconds
+        private readonly Timer _twitterListener = new Timer(50);
 
         private readonly SettingsValidator _validator;
         private readonly BittrexDataProvider _dataProvider;
@@ -36,13 +36,17 @@ namespace McAfeeTradingBot
 
         internal void Run()
         {
-            if (!_validator.ValidateTwitterSettings() || !_validator.ValidateBittrexSettings())
+            if (!_validator.ValidateTwitterSettings() 
+                || !_validator.ValidateBittrexSettings()
+                || !_validator.ValidateBuyAmount())
                 return;
 
             SetTwitterCredentials();
             SetBittrexCredentials();
 
             _currenciesCache = _dataProvider.GetCurrencies();
+
+            Console.WriteLine("Connected... listening for McAfee's tweet.");
 
             _twitterListener.Start();
 
@@ -54,22 +58,29 @@ namespace McAfeeTradingBot
             // Stop the timer while we are processing as MS will otherwise fire another elapsed event on a different thread pool thread.
             _twitterListener.Stop();
 
-            var mcAfeeLastTweet = User.GetUserFromScreenName(McAfeeTwitterName).Status;
-
-            if (_altCoinFinder.TryFindCoinOfTheDay(mcAfeeLastTweet.Text, _currenciesCache.Values, out var coinOfTheDay))
+            try
             {
-                Console.WriteLine("Coin of the day [{0}] found!", coinOfTheDay);
-                Console.WriteLine("Placing BUY order...");
+                var mcAfeeLastTweet = User.GetUserFromScreenName(McAfeeTwitterName).Status;
 
-                var shortName = _currenciesCache
-                    .FirstOrDefault(x => x.Value.Equals(coinOfTheDay, StringComparison.OrdinalIgnoreCase)).Key;
+                if (_altCoinFinder.TryFindCoinOfTheDay(mcAfeeLastTweet.Text, _currenciesCache.Values, out var coinOfTheDay))
+                {
+                    Console.WriteLine("Coin of the day [{0}] found!", coinOfTheDay);
+                    Console.WriteLine("Placing BUY order...");
 
-                _dataProvider.PlaceBuyOrder(shortName);
+                    var shortName = _currenciesCache
+                        .FirstOrDefault(x => x.Value.Equals(coinOfTheDay, StringComparison.OrdinalIgnoreCase)).Key;
+
+                    _dataProvider.PlaceBuyOrder(shortName);
+                }
+                else
+                {
+                    // Coin not found, keep on polling Twitter.
+                    _twitterListener.Start();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Coin not found, keep on polling Twitter.
-                _twitterListener.Start();
+                Console.WriteLine($"Excetpion {ex.Message}");
             }
         }
 
